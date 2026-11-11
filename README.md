@@ -74,3 +74,9 @@ embeddings use `google/siglip-base-patch16-224`. Pitch geometry is adapted from 
   wrong while the ball is in the air. This affects possession during long passes.
 - Distance and speed depend on homography quality. Frames where the keypoint fit fails reuse
   the nearest good homography (up to 2 s away).
+
+## Credits
+
+Started as a Cal Hacks 2026 team project with Vincent Mendy, Dawood Khan and Shaaz Saleem
+([original repo](https://github.com/wheredawoodat949/AI-Hackathon)). This repo is a rebuild of that
+work into a single end-to-end pipeline. The full commit history is preserved.
