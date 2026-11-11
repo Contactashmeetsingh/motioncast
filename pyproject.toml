@@ -3,39 +3,46 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "soccertrack-pipeline"
-version = "0.1.0"
-description = "SAM 3.1 soccer game-state analysis on SoccerTrack v2 (tracking -> minimap -> HOTA)"
-requires-python = ">=3.11"
-# Runtime deps live in requirements.txt (pinned for the GPU box). Keep the
-# editable-install lighter: just what's needed to import + run Phase 0 tooling.
+name = "motioncast"
+version = "0.2.0"
+description = "Soccer broadcast video -> tracked players, ball, teams, minimap and match stats"
+readme = "README.md"
+requires-python = ">=3.10"
 dependencies = [
-    "PyYAML>=6.0",
-    "python-dotenv>=1.0",
-    "huggingface_hub>=0.24",
-    "gdown>=5.0",
-    "numpy>=1.26",
+    "numpy",
+    "opencv-python",
+    "torch",
+    "ultralytics>=8.3",
+    # 0.27+ removed sv.ByteTrack (moved to the separate `trackers` package).
+    "supervision>=0.25,<0.27",
+    "transformers>=4.40,<5",
+    "umap-learn",
+    "scikit-learn",
+    "pillow",
+    "tqdm",
+    "gdown",
 ]
 
 [project.optional-dependencies]
-dev = [
-    "pytest>=8.0",
-    "ruff>=0.5",
-]
+dev = ["pytest", "ruff"]
+
+[project.scripts]
+motioncast = "motioncast.cli:main"
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["src*"]
+include = ["motioncast*"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E741", "B905"]
+
+[tool.ruff.lint.per-file-ignores]
+"motioncast/pipeline.py" = ["N806"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
-
-[tool.ruff]
-line-length = 100
-target-version = "py311"
-
-[tool.ruff.lint]
-# Pragmatic for a hackathon: catch real errors, don't nag on style.
-select = ["E", "F", "I", "W"]
-ignore = ["E501"]  # long lines are fine; docstrings explain a lot
+filterwarnings = ["ignore::FutureWarning:umap"]
