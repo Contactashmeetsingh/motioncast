@@ -16,6 +16,10 @@ video ─► detect (players/GK/refs, ball, 32 pitch keypoints)
 
 ## Quickstart
 
+Needs Python 3.10+ and [ffmpeg](https://ffmpeg.org/) (`brew install ffmpeg` / `apt install ffmpeg`)
+so the output video is H.264 and plays in browsers. Tested on macOS (Apple Silicon) with
+Python 3.12 and 3.13.
+
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
@@ -32,6 +36,10 @@ Outputs land in `outputs/<video name>/`:
 | `tracks.csv` | One row per frame per track: box, role, team, pitch position in metres, ball holder flag |
 | `heatmaps.png` | Occupancy heatmap for each team |
 | `analysis.pkl` | Cached model outputs. `--reuse` re-runs post-processing and rendering without inference |
+
+**Speed** (all three models + tracking, 1080p): about 0.7 s/frame on an Apple M4 GPU (`mps`), so a
+30 s clip takes about 9 minutes, and about 2.2 s/frame on CPU. Try `--max-frames 100` first. A CUDA
+GPU should be faster but hasn't been benchmarked.
 
 Useful flags: `--max-frames 250` (quick test), `--start N`, `--device {auto,mps,cuda,cpu}`,
 `--pitch-every 3` (run the keypoint model every 3rd frame), `--fast-ball` (skip the dedicated

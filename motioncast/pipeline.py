@@ -395,6 +395,8 @@ def run(video_path: str | Path, out_dir: str | Path, cfg: PipelineConfig | None 
         an = load_analysis(cache)
         if Path(an.video_path).name != Path(video_path).name or an.start_frame != cfg.start_frame:
             an = None
+        else:
+            an.timings = {"analyze_s": 0.0, "analysis_reused": True, "device": an.timings.get("device", "cpu")}
     if an is None:
         an = analyze(video_path, cfg, progress=progress)
         save_analysis(an, cache)
